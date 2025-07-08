@@ -23,6 +23,13 @@ import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
 
+// Declare fbq para TypeScript, se necessário, para evitar erros de tipo
+declare global {
+  interface Window {
+    fbq: (arg1: string, arg2: string, arg3?: Record<string, any>) => void
+  }
+}
+
 export default function LandingPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
@@ -33,6 +40,36 @@ export default function LandingPage() {
   // Número de WhatsApp formatado para o link (com código do país e DDD)
   const whatsappNumber = "5511992605960"
   const whatsappLink = `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`
+
+  // Função para rastrear evento de compra (Purchase)
+  const trackPurchase = () => {
+    if (typeof window !== "undefined" && window.fbq) {
+      window.fbq("track", "Purchase", {
+        value: 97.43, // Valor do livro impresso
+        currency: "BRL",
+      })
+    }
+  }
+
+  // Função para rastrear evento de Lead (WhatsApp)
+  const trackWhatsAppLead = () => {
+    if (typeof window !== "undefined" && window.fbq) {
+      window.fbq("track", "Lead", {
+        content_name: "Contato WhatsApp Desconto",
+      })
+    }
+  }
+
+  // Função para rastrear evento de compra de E-book (Purchase)
+  const trackEbookPurchase = () => {
+    if (typeof window !== "undefined" && window.fbq) {
+      window.fbq("track", "Purchase", {
+        value: 0, // E-book não tem preço fixo aqui, ou defina um valor se souber
+        currency: "BRL",
+        content_name: "E-book Purchase",
+      })
+    }
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -55,7 +92,12 @@ export default function LandingPage() {
             <Link href="#depoimentos" className="text-gray-600 hover:text-blue-600 transition-colors">
               Depoimentos
             </Link>
-            <Link href="https://loja.uiclap.com/titulo/ua97524/" target="_blank" rel="noopener noreferrer">
+            <Link
+              href="https://loja.uiclap.com/titulo/ua97524/"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={trackPurchase}
+            >
               <Button className="bg-blue-600 hover:bg-blue-700">Comprar Agora</Button>
             </Link>
           </nav>
@@ -91,7 +133,12 @@ export default function LandingPage() {
               >
                 Depoimentos
               </Link>
-              <Link href="https://loja.uiclap.com/titulo/ua97524/" target="_blank" rel="noopener noreferrer">
+              <Link
+                href="https://loja.uiclap.com/titulo/ua97524/"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={trackPurchase}
+              >
                 <Button className="w-full bg-blue-600 hover:bg-blue-700">Comprar Agora</Button>
               </Link>
             </nav>
@@ -119,7 +166,12 @@ export default function LandingPage() {
               </div>
 
               <div className="flex flex-col gap-3 md:gap-4">
-                <Link href="https://loja.uiclap.com/titulo/ua97524/" target="_blank" rel="noopener noreferrer">
+                <Link
+                  href="https://loja.uiclap.com/titulo/ua97524/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={trackPurchase}
+                >
                   <Button
                     size="lg"
                     className="w-full bg-blue-600 hover:bg-blue-700 text-base md:text-lg px-6 md:px-8 py-3 md:py-4"
@@ -128,7 +180,12 @@ export default function LandingPage() {
                     Comprar Versão Impressa
                   </Button>
                 </Link>
-                <Link href="https://www.amazon.com.br/dp/B0F9VQJGK2" target="_blank" rel="noopener noreferrer">
+                <Link
+                  href="https://www.amazon.com.br/dp/B0F9VQJGK2"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={trackEbookPurchase}
+                >
                   <Button
                     size="lg"
                     variant="outline"
@@ -138,7 +195,7 @@ export default function LandingPage() {
                     Comprar E-book
                   </Button>
                 </Link>
-                <Link href={whatsappLink} target="_blank" rel="noopener noreferrer">
+                <Link href={whatsappLink} target="_blank" rel="noopener noreferrer" onClick={trackWhatsAppLead}>
                   <Button
                     size="lg"
                     className="w-full bg-green-500 hover:bg-green-600 text-white text-base md:text-lg px-6 md:px-8 py-3 md:py-4"
@@ -200,7 +257,7 @@ export default function LandingPage() {
             aproveite esta condição especial. Uma oportunidade única para impulsionar sua carreira com o conhecimento do
             Márcio Maestrello.
           </p>
-          <Link href={whatsappLink} target="_blank" rel="noopener noreferrer">
+          <Link href={whatsappLink} target="_blank" rel="noopener noreferrer" onClick={trackWhatsAppLead}>
             <Button
               size="lg"
               className="w-full md:w-auto bg-green-500 hover:bg-green-600 text-white text-base md:text-lg px-6 md:px-8 py-3 md:py-4"
@@ -543,7 +600,12 @@ export default function LandingPage() {
             </p>
 
             <div className="flex flex-col gap-3 md:gap-4 justify-center mb-6 md:mb-8">
-              <Link href="https://loja.uiclap.com/titulo/ua97524/" target="_blank" rel="noopener noreferrer">
+              <Link
+                href="https://loja.uiclap.com/titulo/ua97524/"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={trackPurchase}
+              >
                 <Button
                   size="lg"
                   className="w-full md:w-auto bg-white text-blue-600 hover:bg-gray-100 text-base md:text-lg px-6 md:px-8 py-3 md:py-4"
@@ -552,7 +614,12 @@ export default function LandingPage() {
                   Comprar Versão Impressa - R$ 97,43
                 </Button>
               </Link>
-              <Link href="https://www.amazon.com.br/dp/B0F9VQJGK2" target="_blank" rel="noopener noreferrer">
+              <Link
+                href="https://www.amazon.com.br/dp/B0F9VQJGK2"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={trackEbookPurchase}
+              >
                 <Button
                   size="lg"
                   variant="outline"
@@ -562,7 +629,7 @@ export default function LandingPage() {
                   Comprar E-book - Amazon
                 </Button>
               </Link>
-              <Link href={whatsappLink} target="_blank" rel="noopener noreferrer">
+              <Link href={whatsappLink} target="_blank" rel="noopener noreferrer" onClick={trackWhatsAppLead}>
                 <Button
                   size="lg"
                   className="w-full md:w-auto bg-green-500 hover:bg-green-600 text-white text-base md:text-lg px-6 md:px-8 py-3 md:py-4"
